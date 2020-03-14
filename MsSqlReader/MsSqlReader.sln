@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsSqlReader", "MsSqlReader\MsSqlReader.csproj", "{F22CF42A-5F2E-4671-95B9-F78F1D5CDBA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F22CF42A-5F2E-4671-95B9-F78F1D5CDBA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22CF42A-5F2E-4671-95B9-F78F1D5CDBA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22CF42A-5F2E-4671-95B9-F78F1D5CDBA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22CF42A-5F2E-4671-95B9-F78F1D5CDBA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3CA868C1-8367-48C5-A262-6A48E5DBD49E}
+	EndGlobalSection
+EndGlobal

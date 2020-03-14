@@ -86,7 +86,7 @@ namespace MsSqlReader.Services
             }
 
             var sqlConnection = GetSqlConnection(existStages, stageName);
-            var sqlProvider = new SqlProvider(sqlConnection.Host, sqlConnection.UserName, sqlConnection.Password);
+            var sqlProvider = new SqlProvider(sqlConnection.Host, sqlConnection.UserName, sqlConnection.Password, sqlConnection.Database);
             SqlProviders.Add(stageName, sqlProvider);
 
             if (!existStages.Contains(stageName))
@@ -102,6 +102,7 @@ namespace MsSqlReader.Services
             Storage.Set($"Stages_{stageName}.Host", sqlConnection.Host);
             Storage.Set($"Stages_{stageName}.UserName", sqlConnection.UserName);
             Storage.Set($"Stages_{stageName}.Password", sqlConnection.Password);
+            Storage.Set($"Stages_{stageName}.Database", sqlConnection.Database);
 
             var existStages = GetStages();
             existStages.Add(stageName);
@@ -115,6 +116,7 @@ namespace MsSqlReader.Services
                 Host = Storage.Get($"Stages_{stageName}.Host"),
                 UserName = Storage.Get($"Stages_{stageName}.UserName"),
                 Password = Storage.Get($"Stages_{stageName}.Password"),
+                Database = Storage.Get($"Stages_{stageName}.Database"),
             };
         }
 
@@ -131,13 +133,16 @@ namespace MsSqlReader.Services
             Console.Write($"UserName : ");
             var userName = Console.ReadLine();
             Console.Write($"Password : ");
-            var password = Console.ReadLine();            
+            var password = Console.ReadLine();
+            Console.Write($"Database (можно оставить пустым): ");
+            var database = Console.ReadLine();
 
             return new SqlConnectionData
             {
                 Host = host,
                 UserName = userName,
                 Password = password,
+                Database = database,
             };
         }
 

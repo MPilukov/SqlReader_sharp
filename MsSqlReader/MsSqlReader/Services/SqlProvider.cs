@@ -10,16 +10,20 @@ namespace MsSqlReader.Services
         private readonly string _host;
         private readonly string _userName;
         private readonly string _password;
+        private readonly string _database;
 
-        public SqlProvider(string host, string userName, string password)
+        public SqlProvider(string host, string userName, string password, string database)
         {
             _host = host;
             _userName = userName;
             _password = password;
+            _database = database;
         }
         public void Execute(string sql, Action<string> trace)
         {
-            var connectionString = $"server=tcp:{_host};Integrated Security=false; database=BRK_MSCRM; User ID={_userName};Password={_password};";
+            var connectionString = string.IsNullOrEmpty(_database)
+                ? $"server=tcp:{_host};Integrated Security=false; User ID={_userName};Password={_password};"
+                : $"server=tcp:{_host};Integrated Security=false; database=BRK_MSCRM; User ID={_userName};Password={_password};";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

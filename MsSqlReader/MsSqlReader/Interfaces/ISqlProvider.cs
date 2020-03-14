@@ -1,7 +1,9 @@
-﻿namespace MsSqlReader.Interfaces
+﻿using System;
+
+namespace MsSqlReader.Interfaces
 {
     interface ISqlProvider
     {
-        public string Execute(string sql);
+        public void Execute(string sql, Action<string> trace);
     }
 }

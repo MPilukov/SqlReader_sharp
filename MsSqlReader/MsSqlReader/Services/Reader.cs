@@ -59,8 +59,7 @@ namespace MsSqlReader.Services
 
                 try
                 {
-                    var response = provider.Execute(query);
-                    Console.WriteLine($"Reponse : {response}");
+                    provider.Execute(query, Console.WriteLine);
                 }
                 catch (Exception exc)
                 {

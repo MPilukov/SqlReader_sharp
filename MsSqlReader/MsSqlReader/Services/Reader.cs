@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace MsSqlReader.Services
 {
-    class Reader
+    internal class Reader
     {
-        private readonly IStorage Storage;
+        private readonly IStorage _storage;
         private Dictionary<string, ISqlProvider> SqlProviders { get; set; }
 
         public Reader(IStorage storage)
         {
-            Storage = storage;
+            _storage = storage;
             SqlProviders = new Dictionary<string, ISqlProvider>();
         }
 
@@ -23,7 +23,7 @@ namespace MsSqlReader.Services
 
             while (mode != "3")
             {
-                Console.WriteLine($"Введите режим приложения (1 - sql, 2 - connectionManager, 3 - exit) : ");
+                Console.WriteLine($"Select mode (1 - sql, 2 - connectionManager, 3 - exit) : ");
                 mode = Console.ReadLine();
 
                 if (mode == "1")
@@ -37,9 +37,9 @@ namespace MsSqlReader.Services
             }
         }
 
-        private void StartConnectionManager()
+        private static void StartConnectionManager()
         {
-
+            throw new NotImplementedException();
         }
 
         private void StartReader()
@@ -49,7 +49,7 @@ namespace MsSqlReader.Services
             var query = "";
             while (!string.Equals(query, "exit", StringComparison.InvariantCultureIgnoreCase))
             {
-                Console.WriteLine("Введите запрос (или 'exit' для смены подключения ) : ");
+                Console.WriteLine("Write query (or 'exit' for change connection) : ");
                 query = Console.ReadLine();
 
                 if (string.Equals(query, "exit", StringComparison.InvariantCultureIgnoreCase))
@@ -63,7 +63,7 @@ namespace MsSqlReader.Services
                 }
                 catch (Exception exc)
                 {
-                    Console.WriteLine($"Не удалось выполнить запрос : {exc.ToString()}");
+                    Console.WriteLine($"Failed to execute the query : {exc}");
                 }
             }
         }
@@ -74,8 +74,8 @@ namespace MsSqlReader.Services
 
             Console.Write(
                 existStages.Any()
-                ? $"Введите название stage ({String.Join(',', existStages)}) : "
-                : $"Введите название stage : "
+                ? $"Write name stage ({string.Join(',', existStages)}) : "
+                : $"Write name stage : "
                 );
 
             var stageName = Console.ReadLine();
@@ -99,10 +99,10 @@ namespace MsSqlReader.Services
 
         private void CreateStageConnection(string stageName, SqlConnectionData sqlConnection)
         {
-            Storage.Set($"Stages_{stageName}.Host", sqlConnection.Host);
-            Storage.Set($"Stages_{stageName}.UserName", sqlConnection.UserName);
-            Storage.Set($"Stages_{stageName}.Password", sqlConnection.Password);
-            Storage.Set($"Stages_{stageName}.Database", sqlConnection.Database);
+            _storage.Set($"Stages_{stageName}.Host", sqlConnection.Host);
+            _storage.Set($"Stages_{stageName}.UserName", sqlConnection.UserName);
+            _storage.Set($"Stages_{stageName}.Password", sqlConnection.Password);
+            _storage.Set($"Stages_{stageName}.Database", sqlConnection.Database);
 
             var existStages = GetStages();
             existStages.Add(stageName);
@@ -113,28 +113,28 @@ namespace MsSqlReader.Services
         {
             return new SqlConnectionData
             {
-                Host = Storage.Get($"Stages_{stageName}.Host"),
-                UserName = Storage.Get($"Stages_{stageName}.UserName"),
-                Password = Storage.Get($"Stages_{stageName}.Password"),
-                Database = Storage.Get($"Stages_{stageName}.Database"),
+                Host = _storage.Get($"Stages_{stageName}.Host"),
+                UserName = _storage.Get($"Stages_{stageName}.UserName"),
+                Password = _storage.Get($"Stages_{stageName}.Password"),
+                Database = _storage.Get($"Stages_{stageName}.Database"),
             };
         }
 
-        private SqlConnectionData GetSqlConnection(List<string> existStages, string stageName)
+        private SqlConnectionData GetSqlConnection(ICollection<string> existStages, string stageName)
         {
             if (existStages.Contains(stageName))
             {
                 return GetStageConnection(stageName);
             }
             
-            Console.WriteLine($"Введите данные для '{stageName}' : ");
+            Console.WriteLine($"Write info for '{stageName}' : ");
             Console.Write($"Host (127.0.0.1) : ");
             var host = Console.ReadLine();
             Console.Write($"UserName : ");
             var userName = Console.ReadLine();
             Console.Write($"Password : ");
             var password = Console.ReadLine();
-            Console.Write($"Database (можно оставить пустым): ");
+            Console.Write($"Database (can be empty): ");
             var database = Console.ReadLine();
 
             return new SqlConnectionData
@@ -148,16 +148,16 @@ namespace MsSqlReader.Services
 
         private List<string> GetStages()
         {
-            var existStagesStr = Storage.Get("Stages");
+            var existStagesStr = _storage.Get("Stages");
             var stages = (existStagesStr ?? "").Split('&');
 
             return stages.Where(x => !string.IsNullOrEmpty(x)).ToList();
         }
 
-        private void SetStages(List<string> stages)
+        private void SetStages(IEnumerable<string> stages)
         {
-            var stagesStr = String.Join('&', stages);
-            Storage.Set("Stages", stagesStr);
+            var stagesStr = string.Join('&', stages);
+            _storage.Set("Stages", stagesStr);
         }
     }
 }

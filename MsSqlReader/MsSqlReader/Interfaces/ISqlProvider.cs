@@ -2,7 +2,7 @@
 
 namespace MsSqlReader.Interfaces
 {
-    interface ISqlProvider
+    internal interface ISqlProvider
     {
         public void Execute(string sql, Action<string> trace);
     }

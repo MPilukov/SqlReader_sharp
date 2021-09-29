@@ -4,14 +4,14 @@ using System.IO;
 
 namespace MsSqlReader
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("MS SQL reader started");
 
-            var currentDictionart = Directory.GetCurrentDirectory();
-            var configManager = new ConfigManager(currentDictionart);
+            var currentDirectory = Directory.GetCurrentDirectory();
+            var configManager = new ConfigManager(currentDirectory);
 
             var storageFile = configManager.Get("Storage:FilePath");
             var storageService = new FileStorage(storageFile);

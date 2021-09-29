@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MsSqlReader.Services
 {
-    class SqlProvider : ISqlProvider
+    internal class SqlProvider : ISqlProvider
     {
         private readonly string _host;
         private readonly string _userName;
@@ -23,29 +23,29 @@ namespace MsSqlReader.Services
         {
             var connectionString = string.IsNullOrEmpty(_database)
                 ? $"server=tcp:{_host};Integrated Security=false; User ID={_userName};Password={_password};"
-                : $"server=tcp:{_host};Integrated Security=false; database=BRK_MSCRM; User ID={_userName};Password={_password};";
+                : $"server=tcp:{_host};Integrated Security=false; database=master; User ID={_userName};Password={_password};";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand(sql, connection);
+                var command = new SqlCommand(sql, connection);
                 command.Connection.Open();
                 var reader = command.ExecuteReader();
 
                 var count = reader.VisibleFieldCount;
 
-                var collumns = new StringBuilder();
-                collumns.Append("Columns : ");
+                var columns = new StringBuilder();
+                columns.Append("Columns : ");
                 for (var i = 0; i < count; i++)
                 {
-                    collumns.Append(reader.GetName(i));
+                    columns.Append(reader.GetName(i));
 
                     if (i < count - 1)
                     {
-                        collumns.Append(", ");
+                        columns.Append(", ");
                     }
                 }
 
-                trace(collumns.ToString());
+                trace(columns.ToString());
 
                 while (reader.HasRows)
                 {

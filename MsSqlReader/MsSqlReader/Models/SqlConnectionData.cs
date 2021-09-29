@@ -1,6 +1,6 @@
 ﻿namespace MsSqlReader.Models
 {
-    class SqlConnectionData
+    internal class SqlConnectionData
     {
         public string Host { get; set; }
         public string UserName { get; set; }

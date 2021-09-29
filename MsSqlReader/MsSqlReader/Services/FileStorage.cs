@@ -6,20 +6,10 @@ using System.Linq;
 
 namespace MsSqlReader.Services
 {
-    class FileStorage : IStorage
+    internal class FileStorage : IStorage
     {
         private readonly string _filePath;
-        private Dictionary<string, string> Cache = null;
-
-        class Items
-        {
-            public List<Item> Values { get; set; }
-        }
-        class Item
-        {
-            public string Key { get; set; }
-            public string Value { get; set; }
-        }
+        private Dictionary<string, string> _cache = null;
 
         public FileStorage(string filePath)
         {
@@ -28,9 +18,9 @@ namespace MsSqlReader.Services
 
         private Dictionary<string, string> GetData()
         {
-            if (Cache != null)
+            if (_cache != null)
             {
-                return Cache;
+                return _cache;
             }
 
             var response = new Dictionary<string, string>();
@@ -41,28 +31,28 @@ namespace MsSqlReader.Services
             }            
 
             var data = File.ReadAllText(_filePath);
-            var items = JsonConvert.DeserializeObject<Items>(data);
+            var items = JsonConvert.DeserializeObject<DataStorage>(data);
 
 
             foreach (var item in items.Values)
             {
                 if (response.ContainsKey(item.Key))
                 {
-                    throw new FileLoadException($"Дублирующиеся ключи в файле : {_filePath}.");
+                    throw new FileLoadException($"Duplicate key in file : {_filePath}.");
                 }
 
                 response.Add(item.Key, item.Value);
             }
 
-            Cache = response;
+            _cache = response;
             return response;
         }
 
         private void SetData(Dictionary<string, string> data)
         {
-            var dataForSave = new Items
+            var dataForSave = new DataStorage
             {
-                Values = data.Select(x => new Item
+                Values = data.Select(x => new ItemDataStorage
                 {
                     Key = x.Key,
                     Value = x.Value,
@@ -94,7 +84,7 @@ namespace MsSqlReader.Services
 
             SetData(data);
 
-            Cache = null;
+            _cache = null;
         }
     }
 }

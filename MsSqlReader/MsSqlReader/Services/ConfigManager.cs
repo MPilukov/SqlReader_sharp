@@ -2,7 +2,8 @@
 using MsSqlReader.Interfaces;
 
 namespace MsSqlReader.Services
-{   class ConfigManager : IConfigManager
+{
+    internal class ConfigManager : IConfigManager
     {
         private readonly IConfigurationRoot _configurationRoot;
         public ConfigManager(string path)
